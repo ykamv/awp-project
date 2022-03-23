@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import signinImage from '../assets/hero.jpg';
-
+import classnames from 'classnames';
 // import { initialState } from 'stream-chat-react/dist/components/Channel/channelState';
 
 const cookies = new Cookies();
@@ -30,6 +30,20 @@ const Auth = () => {
 
     }
 
+    const [isErrUN, setIsErrUN] = useState(false);
+    var errUN = classnames({
+        'auth__form-container_fields-content_input_border':isErrUN
+    })
+
+    const [isErrPW, setIsErrPW] = useState(false);
+    var errPW = classnames({
+        'auth__form-container_fields-content_input_border':isErrPW
+    })
+    const [isErrPN, setIsErrPN] = useState(false);
+    var errPN = classnames({
+        'auth__form-container_fields-content_input_border':isErrPN
+    })
+
     const handleSubmit = async (e)=>{
         e.preventDefault();
 
@@ -41,29 +55,63 @@ const Auth = () => {
         // const URL = 'https://chat-room-yk.herokuapp.com/auth';
         const URL = 'http://localhost:5000/auth';
 
-        // data is coming from the url/{''} , which is either signup or login
-        // we also destructure the data coming from the post request
-        const { data: { token, userId, hashedPassword, fullName } } = await axios.post(`${URL}/${isSignup ? 'signup':'login'}`,{username,password,fullName: form.fullName,phoneNumber,avatarURL});
-
-        cookies.set('token',token);
-        cookies.set('username',username);
-        cookies.set('fullName',fullName);
-        cookies.set('userId',userId);
-
-        if(isSignup){
-            cookies.set('phoneNumber',phoneNumber);
-            cookies.set('avatarURL',avatarURL);
-            cookies.set('hashedPassword',hashedPassword);
-            
+        var un_check = /^[A-Za-z0-9 ]{3,20}$/;
+        var pw_check= /^[A-Za-z0-9!@#$%^&*()_]{6,20}$/;
+        var pn_check= /^[0-9]{10}$/;
+        
+        var flag =0;
+        if (!un_check.test(username)){
+            flag = 1;
+            setIsErrUN(true);
         }
-        // we reload the page becuase we get the auth token from our server, go to app.jsx, here we check for the auth token, if it is there we go to our chats module
-        window.location.reload();
+        else{
+            setIsErrUN(false);
+            flag = 0;
+        }
+        if (!pw_check.test(password)){
+            flag =1;
+            setIsErrPW(true);
+        }
+        else{
+            setIsErrPW(false);
+            flag = 0;
+        }
+        if(isSignup && !pn_check.test(phoneNumber)){
+            flag =1;
+            setIsErrPN(true);
+        }
+        else{
+            setIsErrPN(false);
+            flag = 0;
+        }
+
+        if(flag==0){
+            
+            // data is coming from the url/{''} , which is either signup or login
+            // we also destructure the data coming from the post request
+            const { data: { token, userId, hashedPassword, fullName } } = await axios.post(`${URL}/${isSignup ? 'signup':'login'}`,{username,password,fullName: form.fullName,phoneNumber,avatarURL});
+    
+            cookies.set('token',token);
+            cookies.set('username',username);
+            cookies.set('fullName',fullName);
+            cookies.set('userId',userId);
+    
+            if(isSignup){
+                cookies.set('phoneNumber',phoneNumber);
+                cookies.set('avatarURL',avatarURL);
+                cookies.set('hashedPassword',hashedPassword);
+                
+            }
+            // we reload the page becuase we get the auth token from our server, go to app.jsx, here we check for the auth token, if it is there we go to our chats module
+            window.location.reload();
+        }
     }
 
     // to switch mode between signin and signup
     const switchMode = () => {
         setIsSignup((prevIsSignup)=> !prevIsSignup);
     }
+    
     return (
 
         <div className='auth__form-container'>
@@ -79,7 +127,6 @@ const Auth = () => {
                                     name="fullName" type="text"
                                     placeholder='Full Name'
                                     onChange={handleChange}
-                                    pattern="/^[A-Za-z]+$/"
                                     required
                                 />
                             </div>
@@ -87,7 +134,8 @@ const Auth = () => {
 
                         <div className='auth__form-container_fields-content_input'>
                             <label htmlFor='username'>User Name</label>
-                            <input
+                            <input  
+                                className={errUN}
                                 name="username"
                                 placeholder="User Name"
                                 type="text" onChange={handleChange} required
@@ -98,6 +146,7 @@ const Auth = () => {
                             <div className='auth__form-container_fields-content_input'>
                                 <label htmlFor='phoneNumber'>Phone Number</label>
                                 <input
+                                    className={errPN}
                                     name="phoneNumber" type="text"
                                     placeholder='Phone Number'
                                     onChange={handleChange} required
@@ -119,6 +168,7 @@ const Auth = () => {
                         <div className='auth__form-container_fields-content_input'>
                             <label htmlFor='password'>Password</label>
                             <input
+                                className={errPW}
                                 name="password"
                                 placeholder="Password"
                                 type="password" onChange={handleChange} required
