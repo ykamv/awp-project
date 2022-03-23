@@ -3,7 +3,7 @@ import { Avatar, useChatContext } from 'stream-chat-react';
 
 const TeamChannelPreview = ({ setActiveChannel, setIsCreating, setIsEditing, setToggleContainer, channel, type }) => {
 
-    // this is called a hook
+    // this is called a hook, gets channel and client info from getstream.io, also we are renaming channel to activeChannel
     const { channel: activeChannel, client } = useChatContext();
 
     const ChannelPreview = () => (

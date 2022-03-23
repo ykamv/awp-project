@@ -7,7 +7,7 @@ const authRoutes = require("./routes/auth.js");
 
 // this is an object
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -21,7 +21,7 @@ app.use(cors());
 // this will help us to pass json payloads from front end to back end
 app.use(express.json());
 
-// built in node js middle ware function 
+// inbuilt in express to recognize the incoming Request Object as strings or arrays 
 app.use(express.urlencoded());
 
 // our first route
@@ -30,7 +30,6 @@ app.get('/',(req,res)=>{
 })
 
 // endpoint to get user info to send to twilio
-
 app.post('/', (req, res) => {
     const { message, user: sender, type, members } = req.body;
 

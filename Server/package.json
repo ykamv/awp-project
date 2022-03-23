@@ -18,7 +18,9 @@
     "dotenv": "^15.0.0",
     "express": "^4.17.2",
     "getstream": "^7.4.1",
+    "mysql2": "^2.3.3",
     "nodemon": "^2.0.15",
+    "sqlite3": "^5.0.2",
     "stream-chat": "^5.4.0",
     "twilio": "^3.73.1"
   }

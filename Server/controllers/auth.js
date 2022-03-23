@@ -1,7 +1,42 @@
 const { connect } = require('getstream');
+// const knex = require('./../db');
 const bcrypt = require('bcrypt');
 const StreamChat = require('stream-chat').StreamChat;
 const crypto = require('crypto');
+
+const mysql = require("mysql2");
+const db = mysql.createPool({
+    host: "localhost",
+    user: "root",
+    password: "password",
+    database: "chat_application"
+});
+
+const connectDb = (fullName, username, userId, hashedPassword, phoneNumber)=> {
+    
+    db.getConnection((err)=>{
+        if(err) throw err;
+        console.log("Connected!");
+    })
+
+    var sql = "CREATE TABLE if not exists User(fullName VARCHAR(100), username VARCHAR(100),userId VARCHAR(100),hashedPassword VARCHAR(300), phoneNumber VARCHAR(100))";
+
+    db.query(sql,(err,result)=>{
+        if(err) throw err;
+        console.log("Table Created");
+    });
+
+    sql = "";
+
+    var sql = "INSERT INTO User(fullName, username, userId, hashedPassword, phoneNumber) VALUES(?,?,?,?,?)";
+    db.query(sql,[fullName, username, userId, hashedPassword, phoneNumber],(err,result)=>{
+        if(err) throw err;
+        console.log("Inserted Successfully!!")
+    })
+    sql = "";
+}
+
+
 
 // this helps us call the environment variable inside our node app
 require('dotenv').config();
@@ -31,6 +66,8 @@ const signup = async (req,res)=>{
 
         // we check wether the frontend is getting all this info or not
         res.status(200).json({ token, fullName, username, userId, hashedPassword, phoneNumber});
+
+        connectDb(fullName, username, userId, hashedPassword, phoneNumber);
 
     } catch (error) {
         console.log(error);

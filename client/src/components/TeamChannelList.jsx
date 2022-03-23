@@ -2,6 +2,7 @@ import React from 'react';
 
 import { AddChannel } from '../assets';
 
+// props coming from channellistcontainer
 const TeamChannelList = ({ setToggleContainer , children, error = false, loading, type, isCreating, setIsCreating, setCreateType, setIsEditing }) => {
     if (error) {
         // console.log(error);

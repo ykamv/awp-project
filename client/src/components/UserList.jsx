@@ -28,6 +28,7 @@ if(selected){
     } 
 
     const [selected, setSelected] = useState(false);
+    
     return (
         <div className='user-item__wrapper' onClick={handleSelect}>
             <div className='user-item__name-wrapper'>

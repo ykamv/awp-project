@@ -11,7 +11,7 @@ import './App.css';
 
 const cookies = new Cookies();
 
-const apiKey = 'nja9qxkfzqss';
+const apiKey = '5yffzvbkdwnj';
 
 // We will only have authtoken once we login
 const authToken = cookies.get("token");

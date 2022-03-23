@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
-import signinImage from '../assets/signup.jpg';
+import signinImage from '../assets/hero.jpg';
+
 // import { initialState } from 'stream-chat-react/dist/components/Channel/channelState';
 
 const cookies = new Cookies();
@@ -17,10 +18,9 @@ const initialState = {
 
 const Auth = () => {
 
-
     const[form,setForm] = useState(initialState);
 
-    const [isSignup, setIsSignup] = useState(true);
+    const [isSignup, setIsSignup] = useState(false);
 
     const handleChange = (e) => { 
         // form is not a single text field, its an object, ...form is use to spread all the other input fields because we still want to keep them while we focus on one.
@@ -38,7 +38,8 @@ const Auth = () => {
         // destructuring the data from form
         const { username,password,phoneNumber, avatarURL } = form;
 
-        const URL = 'https://chat-room-yk.herokuapp.com/auth';
+        // const URL = 'https://chat-room-yk.herokuapp.com/auth';
+        const URL = 'http://localhost:5000/auth';
 
         // data is coming from the url/{''} , which is either signup or login
         // we also destructure the data coming from the post request
@@ -77,7 +78,9 @@ const Auth = () => {
                                 <input
                                     name="fullName" type="text"
                                     placeholder='Full Name'
-                                    onChange={handleChange} required
+                                    onChange={handleChange}
+                                    pattern="/^[A-Za-z]+$/"
+                                    required
                                 />
                             </div>
                         )}
@@ -141,9 +144,9 @@ const Auth = () => {
                     </form>
                             <div className='auth__form-container_fields-account'>
                                 <p>
-                                    {isSignup ? "Already have an account?" : "Dont have an account?"}
+                                    {isSignup ? "Already have an account ? " : "Dont have an account ? "}
                                     <span onClick={switchMode}>
-                                      {isSignup ? "Sign In":"Sign Up"}  
+                                      {isSignup ? " Sign In":" Sign Up"}  
                                     </span>
 
                                 </p>
